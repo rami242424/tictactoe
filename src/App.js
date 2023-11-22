@@ -10,14 +10,16 @@ function Square({ value, onSquareClick }) {
 
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
-  // 기본적으로 첫 번째 이동을 x로 설정
-  // 플레이어가 움직일 때마다, 다음 플레이어를 결정하기 위해
-  // xIsNext(불리언)의 값이 반전되고 게임의 state가 저장됩니다.
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
+    // 해당 사각형에 이미 X또는 O값이 있는지 확인하고, 값이 있다면 보드의 state를 업데이트
+    // 하기 전에 handleClick함수에서 미리 return한다.
+    if (squares[i]) {
+      return;
+    }
+
     const nextSquares = squares.slice();
-    // Board의 handleClick 함수를 업데이트하여 xIsNext의 값을 반전시킨다.
     if (xIsNext) {
       nextSquares[i] = "X";
     } else {
