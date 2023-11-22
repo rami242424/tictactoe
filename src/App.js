@@ -13,8 +13,6 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
-    // 해당 사각형에 이미 X또는 O값이 있는지 확인하고, 값이 있다면 보드의 state를 업데이트
-    // 하기 전에 handleClick함수에서 미리 return한다.
     if (squares[i]) {
       return;
     }
@@ -47,4 +45,25 @@ export default function Board() {
       </div>
     </>
   );
+}
+
+//승자를 확인하고 적절하게 X,O,null을 반환하는 헬퍼 함수 calculateWinner 추가하기 (추가위치 상관없음)
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 }
