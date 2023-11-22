@@ -13,7 +13,10 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   function handleClick(i) {
-    if (squares[i]) {
+    // calculateWinner를 호출하여 플레이어가 이겼는지 확인
+    // 사용자가 이미 X또는 O를 클릭했는지 동시에 확인 가능(해당되면 조기 반환)
+    // if (squares[i] || calculateWinner(squares)) {
+    if (squares[i] || calculateWinner(squares) || squares[i]) {
       return;
     }
 
@@ -26,8 +29,19 @@ export default function Board() {
     setSquares(nextSquares);
     setXIsNext(!xIsNext);
   }
+
+  // status 섹션을 추가하여 winner:x or o를 표시하고, 게임중인 경우에는 다음 플레이어의 차례를 표시
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = "Winner: " + winner;
+  } else {
+    status = "Next player: " + (xIsNext ? "X" : "O");
+  }
+
   return (
     <>
+      <div className="status">{status}</div>
       <div className="board-row">
         <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
         <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
@@ -47,7 +61,6 @@ export default function Board() {
   );
 }
 
-//승자를 확인하고 적절하게 X,O,null을 반환하는 헬퍼 함수 calculateWinner 추가하기 (추가위치 상관없음)
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
