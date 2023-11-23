@@ -102,6 +102,61 @@ export default function Game(){
     setXIsNext(!xIsNext);
   }
 
+  // Game 컴포넌트에서 history를 map해보기
+  function jumpTo(nextMove){
+    // todo
+  }
+  const moves = history.map((squares, move) => {
+    let description;
+    if (move > 0){
+      description = 'Go to move #' + move;
+    } else {
+      description = 'Go to game start';
+    }
+
+    return (
+      <li>
+        <button onClick = {() => jumpTo(move)}>
+          {description}
+        </button>
+      </li>
+    );
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return(
     <div className="game">
       <div className="game-board">
@@ -110,7 +165,7 @@ export default function Game(){
       </div>
       <div className="game-info">
         <ol>
-          {/* {TODO} */}
+          {moves}
         </ol>
       </div>
     </div>
