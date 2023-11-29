@@ -89,23 +89,40 @@ function calculateWinner(squares) {
 }
 
 export default function Game(){
-  // 다음 플레이어와 이동 history를 추적하기 위해 state추가
-  const [xIsNext, setXIsNext] = useState(true);
   const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [currentMove, setCurrentMove] = useState(0); // 사용자가 현재 어떤 단계를 보고있는지 추적
+  
+  // 다음 플레이어와 이동 history를 추적하기 위해 state추가
+  // const [xIsNext, setXIsNext] = useState(true); 대신 아래 코드사용
+  const xIsNext = currentMove % 2 === 0;
+
   // 현재 이동에 대한 squares를 렌더링하기 위해 history에서 마지막 squares 배열을 읽어야한다(렌더링중에 계산할 수 있는 충분한 정보가 이미 있으므로 useState는 필요하지않다.)
-  const currentSquares = history[history.length - 1];
+  // const currentSquares = history[history.length - 1]; 
+  // 위 코드로 항상 최종 동작을 렌더링 하는 대신 현재 선택한 동작을 렌더링하도록 아래와 같이 수정
+  const currentSquares = history[currentMove];
+
+
 
   // Board 컴포넌트가 게임을 업데이트할 때 호출한(할) 함수
   // handlePlay가 호출되면 > 업데이튼 된 squares 배열을 onPlay로 전달한다. 
   function handlePlay(nextSquares) {
+    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory([...history, nextSquares]); // history에 있는 모든 항목을 포함하는 새 배열을 만들고, 그 뒤에 nextSquares를 만든다.(...history 는 history의 모든 항목 열거 라고 이해하면 된다.)
-    setXIsNext(!xIsNext);
+
+    // 시간여행구현하기
+    setHistory(nextHistory);
+    setCurrentMove(nextHistory.length - 1);
+
+    // setXIsNext(!xIsNext);
   }
 
   // Game 컴포넌트에서 history를 map해보기
   function jumpTo(nextMove){
-    // todo
+    // currentMove없데이트, currentMove를 변경하는 숫자가 짝수이면 xIsNext를 true로!
+    setCurrentMove(nextMove);
+    // setXIsNext(nextMove % 2 === 0);
   }
+
   const moves = history.map((squares, move) => {
     let description;
     if (move > 0){
@@ -115,7 +132,7 @@ export default function Game(){
     }
 
     return (
-      <li>
+      <li key={move}>
         <button onClick = {() => jumpTo(move)}>
           {description}
         </button>
